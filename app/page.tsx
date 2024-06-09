@@ -1,6 +1,8 @@
 import Image from "next/image";
-import {PrismaClient} from "@prisma/client"
-const client=new PrismaClient();
+
+import prisma from "@/db"
+
+const client=prisma;
 async function getUserDetails(){
   try{
     const users=await client.user.findMany();
@@ -12,15 +14,17 @@ async function getUserDetails(){
 }
 export default async function Home() {
   const users=await getUserDetails();
+  await new Promise((r)=> setTimeout(r,5000));
   return (
     <>
       {users?.map(user => (
         <div key={user.id}>
-          Username: {user.username}
+          username: {user.username}
           <br />
           Password: {user.password}
         </div>
-      ))}
+      ))
+      }
     </>
   );
 }
