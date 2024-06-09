@@ -3,20 +3,24 @@ import {PrismaClient} from "@prisma/client"
 const client=new PrismaClient();
 async function getUserDetails(){
   try{
-    const user=await client.user.findFirst();
-    return {
-     username:user?.username
-    }
+    const users=await client.user.findMany();
+    return users;
   }
   catch(e){
     console.error(e);
   }
 }
 export default async function Home() {
-  const userDetails=await getUserDetails();
+  const users=await getUserDetails();
   return (
-    <div>
-     {userDetails?.username}
-    </div>
+    <>
+      {users?.map(user => (
+        <div key={user.id}>
+          Username: {user.username}
+          <br />
+          Password: {user.password}
+        </div>
+      ))}
+    </>
   );
 }
